@@ -1,5 +1,6 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { useAutenticacao } from '../contextos/ContextoAutenticacao';
+import { PaginaLanding } from '../paginas/PaginaLanding';
 import { PaginaEntrada } from '../paginas/PaginaEntrada';
 import { PaginaCadastro } from '../paginas/PaginaCadastro';
 import { PaginaPainel } from '../paginas/PaginaPainel';
@@ -26,6 +27,7 @@ function RotaPublica({ children }) {
 export function RotasAplicacao() {
   return (
     <Routes>
+      <Route path="/" element={<PaginaLanding />} />
       <Route path="/entrar" element={<RotaPublica><PaginaEntrada /></RotaPublica>} />
       <Route path="/cadastro" element={<RotaPublica><PaginaCadastro /></RotaPublica>} />
       <Route element={<RotaPrivada />}>
@@ -37,7 +39,6 @@ export function RotasAplicacao() {
           <Route path="/calendario" element={<PaginaCalendario />} />
           <Route path="/integracoes" element={<PaginaIntegracoes />} />
           <Route path="/notificacoes" element={<PaginaNotificacoes />} />
-          <Route path="/" element={<Navigate to="/painel" replace />} />
           <Route path="*" element={<Navigate to="/painel" replace />} />
         </Route>
       </Route>
