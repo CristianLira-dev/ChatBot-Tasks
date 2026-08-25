@@ -4,6 +4,7 @@ import { useAutenticacao } from '../contextos/ContextoAutenticacao';
 import { IconeWhatsApp } from '../componentes/IconeWhatsApp';
 import { MarcaLembrai } from '../componentes/MarcaLembrai';
 import { RotuloCampo } from '../componentes/RotuloCampo';
+import { formatarWhatsApp } from '../utilitarios/telefone';
 
 export function PaginaEntrada() {
   const { entrar } = useAutenticacao();
@@ -12,7 +13,10 @@ export function PaginaEntrada() {
   const [erro, setErro] = useState('');
   const [enviando, setEnviando] = useState(false);
 
-  const alterar = (evento) => setDados({ ...dados, [evento.target.name]: evento.target.value });
+  const alterar = (evento) => {
+    const { name, value } = evento.target;
+    setDados({ ...dados, [name]: name === 'telefone' ? formatarWhatsApp(value) : value });
+  };
 
   async function enviar(evento) {
     evento.preventDefault();
