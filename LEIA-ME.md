@@ -22,11 +22,10 @@ No Windows, abra um PowerShell na pasta do projeto e execute:
 
 ```powershell
 cd C:\cristian\ChatBot-Tasks
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\scripts\iniciar-local.ps1
+npm run dev
 ```
 
-O script verifica Node.js, npm e Python, cria o ambiente virtual do chatbot, instala dependências ausentes e abre três janelas separadas para os serviços.
+O comando verifica Node.js, npm e Python, cria o ambiente virtual do chatbot, instala dependências ausentes e inicia os três serviços no mesmo terminal. Não é necessário executar `Set-ExecutionPolicy`.
 
 | Serviço | Endereço |
 |---|---|
@@ -189,7 +188,8 @@ Para Google Calendar ou Outlook, configure os clientes OAuth no provedor e infor
 
 ## Solução de problemas no Windows
 
-Se `python` não for reconhecido, instale Python 3.11 ou superior e marque a opção de adicionar Python ao PATH. Se o PowerShell bloquear o script, execute `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` somente na sessão atual.
+Se `python` não for reconhecido, instale Python 3.11 ou superior e marque a opção de adicionar Python ao PATH. O comando `npm run dev` não exige alteração na política de execução do PowerShell. Se o Windows não reconhecer `npm`, feche o terminal, abra um novo e confirme a instalação com `node --version` e `npm --version`.
+
 
 Se a porta 5173, 3000 ou 8000 estiver ocupada, encerre o processo que está usando a porta ou altere `PORTA_BACKEND` e os comandos de inicialização. Se o painel abrir, mas não carregar dados, confirme primeiro `http://localhost:3000/api/saude` e depois verifique se a janela do chatbot está ativa.
 

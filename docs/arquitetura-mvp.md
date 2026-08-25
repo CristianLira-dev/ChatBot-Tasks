@@ -107,6 +107,8 @@ ChatBot-Tasks/
 │   └── Dockerfile
 ├── docs/arquitetura-mvp.md
 ├── docker-compose.yml
+├── package.json
+├── scripts/iniciar-local.js
 ├── scripts/iniciar-local.ps1
 ├── scripts/iniciar-local.sh
 ├── LEIA-ME.md

@@ -4,6 +4,12 @@
 
 MVP de um assistente acadêmico integrado ao WhatsApp por meio da Evolution API, com frontend React/JavaScript, backend Node.js/JavaScript, chatbot Python/FastAPI, PostgreSQL e Redis/BullMQ.
 
-A execução rápida recomendada **não exige Docker**. Consulte [`LEIA-ME.md`](LEIA-ME.md) para iniciar os serviços localmente, inclusive com o script `scripts/iniciar-local.ps1` no Windows. O Docker Compose permanece disponível como alternativa futura.
+A execução rápida recomendada **não exige Docker**. Na pasta do projeto, execute:
+
+```powershell
+npm run dev
+```
+
+Esse comando inicia o chatbot, o backend em modo memória e o frontend. Depois acesse [http://localhost:5173](http://localhost:5173). Consulte [`LEIA-ME.md`](LEIA-ME.md) para o modo completo com PostgreSQL/Redis e para a alternativa futura com Docker Compose.
 
 A arquitetura completa está em [`docs/arquitetura-mvp.md`](docs/arquitetura-mvp.md).
