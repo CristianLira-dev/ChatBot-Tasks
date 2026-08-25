@@ -48,7 +48,7 @@ O frontend nunca acessa PostgreSQL, Redis, Evolution API, tokens OAuth ou o chat
 | `redis` | Redis 7 | Filas, idempotência e armazenamento transitório | 6379 |
 | Evolution API | Serviço externo ou container separado | WhatsApp, envio e webhooks | externo |
 
-Duas formas de execução são suportadas. A primeira é o **Docker Compose**, recomendado para reproduzir o ambiente completo com PostgreSQL, Redis, backend, chatbot e frontend. A segunda é a execução local dos três aplicativos, usando PostgreSQL e Redis fornecidos por uma instalação local ou por containers; ela facilita depuração, mas exige configurar cada runtime individualmente.
+Duas formas de execução são suportadas. A primeira, recomendada para desenvolvimento no Windows, é a execução local dos aplicativos sem Docker, usando o modo memória para uma experiência rápida ou instalações locais de PostgreSQL e Redis para persistência e processamento assíncrono. A segunda é o **Docker Compose**, mantido como alternativa para reproduzir o ambiente completo com serviços isolados.
 
 | Abordagem | Trade-offs | Custo | Complexidade de configuração |
 |---|---|---|---|
@@ -107,7 +107,8 @@ ChatBot-Tasks/
 │   └── Dockerfile
 ├── docs/arquitetura-mvp.md
 ├── docker-compose.yml
-├── .env.exemplo
+├── scripts/iniciar-local.ps1
+├── scripts/iniciar-local.sh
 ├── LEIA-ME.md
 └── README.md
 ```

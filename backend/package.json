@@ -6,6 +6,7 @@
   "main": "src/servidor.js",
   "scripts": {
     "desenvolvimento": "node --watch src/servidor.js",
+    "desenvolvimento:memoria": "node scripts/servidor-memoria.js",
     "inicio": "node src/servidor.js",
     "worker": "node src/worker.js",
     "teste": "node --test",
