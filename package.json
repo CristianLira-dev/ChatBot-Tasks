@@ -2,7 +2,7 @@
   "name": "chatbot-tasks",
   "version": "1.0.0",
   "private": true,
-  "description": "Inicializador local do Assistente Acadêmico",
+  "description": "Inicializador local da Lembraí",
   "scripts": {
     "dev": "node scripts/iniciar-local.js",
     "inicio": "npm run dev"

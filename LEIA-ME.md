@@ -1,8 +1,8 @@
-# Assistente Acadêmico — Guia de execução
+# Lembraí — Guia de execução
 
 > Você fala. O assistente organiza.
 
-Este repositório contém o MVP de um assistente acadêmico integrado ao WhatsApp, com painel web em React, API em Node.js, chatbot em Python/FastAPI, PostgreSQL e Redis/BullMQ. A execução recomendada para desenvolvimento no Windows **não depende de Docker**.
+Este repositório contém o MVP da Lembraí, um assistente acadêmico integrado ao WhatsApp, com painel web em React, API em Node.js, chatbot em Python/FastAPI, PostgreSQL e Redis/BullMQ. A execução recomendada para desenvolvimento no Windows **não depende de Docker**.
 
 ## O que foi implementado
 
@@ -195,4 +195,4 @@ Se a porta 5173, 3000 ou 8000 estiver ocupada, encerre o processo que está usan
 
 ## Arquitetura
 
-A arquitetura detalhada, o modelo de dados, os fluxos de autenticação, webhooks, calendários, filas, segurança, rotas e o plano de evolução estão em [`docs/arquitetura-mvp.md`](docs/arquitetura-mvp.md).
+A arquitetura detalhada, o modelo de dados, os fluxos de autenticação, webhooks, calendários, filas, segurança, rotas e o plano de evolução estão em [`docs/arquitetura-mvp.md`](docs/arquitetura-mvp.md). Os tokens visuais oficiais estão em [`docs/design-system-lembr-ai.md`](docs/design-system-lembr-ai.md).

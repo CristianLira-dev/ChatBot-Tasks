@@ -2,7 +2,7 @@
   "name": "assistente-academico-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "API e workers do Assistente Academico",
+  "description": "API e workers da Lembraí",
   "main": "src/servidor.js",
   "scripts": {
     "desenvolvimento": "node --watch src/servidor.js",

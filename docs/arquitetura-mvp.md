@@ -1,8 +1,8 @@
-# Assistente Acadêmico — arquitetura do MVP
+# Lembraí — arquitetura do MVP
 
 ## 1. Objetivo e recorte
 
-O produto é um assistente acadêmico pessoal no WhatsApp. O estudante escreve uma mensagem natural, o sistema interpreta a intenção, apresenta uma confirmação quando a operação altera dados e, somente depois, cria ou modifica a tarefa, agenda lembretes e sincroniza calendários.
+A Lembraí é um assistente acadêmico pessoal no WhatsApp. O estudante escreve uma mensagem natural, o sistema interpreta a intenção, apresenta uma confirmação quando a operação altera dados e, somente depois, cria ou modifica a tarefa, agenda lembretes e sincroniza calendários.
 
 O primeiro incremento implementado neste repositório prioriza o fluxo de ponta a ponta: **mensagem recebida → webhook Evolution API → fila BullMQ → identificação do usuário → chatbot Python → confirmação persistida → tarefa → lembrete → resposta pelo WhatsApp**. O painel React expõe autenticação, dashboard, CRUD de tarefas, lembretes, conversas e integrações. Os provedores de calendário possuem uma abstração real e adaptadores preparados para OAuth; sem credenciais de provedor, o ambiente local usa um modo simulado explícito.
 
