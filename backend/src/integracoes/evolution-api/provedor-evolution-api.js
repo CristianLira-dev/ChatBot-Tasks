@@ -1,0 +1,50 @@
+const axios = require('axios');
+const ambiente = require('../../configuracao/ambiente');
+const logger = require('../../configuracao/logger');
+
+function normalizarTelefone(valor = '') {
+  return String(valor).replace(/@s\.whatsapp\.net|@g\.us|\D/g, '');
+}
+
+function extrairTextoMensagem(dados = {}) {
+  const mensagem = dados.message || {};
+  return mensagem.conversation
+    || mensagem.extendedTextMessage?.text
+    || mensagem.imageMessage?.caption
+    || mensagem.videoMessage?.caption
+    || '';
+}
+
+class ProvedorEvolutionApi {
+  constructor() {
+    this.simulado = ambiente.modoWhatsapp !== 'evolution' || !ambiente.evolutionUrl || !ambiente.evolutionChave;
+    this.cliente = axios.create({ baseURL: ambiente.evolutionUrl, timeout: 10000, headers: { apikey: ambiente.evolutionChave, 'Content-Type': 'application/json' } });
+  }
+
+  async enviarTexto(telefone, texto) {
+    const destino = normalizarTelefone(telefone);
+    if (this.simulado) {
+      logger.info({ telefone: destino, texto }, 'WhatsApp simulado');
+      return { simulado: true, telefone: destino, texto };
+    }
+    const resposta = await this.cliente.post(`/message/sendText/${ambiente.evolutionInstancia}`, { number: destino, text: texto, delay: 300 });
+    return resposta.data;
+  }
+
+  async configurarWebhook(url) {
+    if (this.simulado) return { simulado: true, url };
+    const resposta = await this.cliente.post(`/webhook/set/${ambiente.evolutionInstancia}`, {
+      webhook: {
+        enabled: true,
+        url,
+        byEvents: false,
+        base64: false,
+        headers: { 'x-webhook-secret': ambiente.evolutionWebhookSegredo },
+        events: ['MESSAGES_UPSERT', 'MESSAGES_UPDATE', 'CONNECTION_UPDATE', 'QRCODE_UPDATED']
+      }
+    });
+    return resposta.data;
+  }
+}
+
+module.exports = { ProvedorEvolutionApi, normalizarTelefone, extrairTextoMensagem };
