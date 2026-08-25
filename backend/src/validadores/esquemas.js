@@ -1,15 +1,18 @@
 const { z } = require('zod');
 
+const esquemaTelefone = z.string().trim().min(8).max(30).transform((valor) => valor.replace(/\D/g, '')).refine((valor) => valor.length >= 8 && valor.length <= 15, 'Informe um número de WhatsApp válido');
+
 const esquemaCadastro = z.object({
   nome: z.string().trim().min(2).max(120),
   email: z.string().trim().email().transform((valor) => valor.toLowerCase()),
   senha: z.string().min(8).max(128),
-  telefone: z.string().trim().min(8).max(30).optional(),
+  telefone: esquemaTelefone,
   fusoHorario: z.string().trim().min(3).max(80).default('America/Sao_Paulo')
 });
 
 const esquemaEntrada = z.object({
   email: z.string().trim().email().transform((valor) => valor.toLowerCase()),
+  telefone: esquemaTelefone,
   senha: z.string().min(1).max(128)
 });
 
@@ -64,4 +67,4 @@ function validar(esquema, dados) {
   return resultado.data;
 }
 
-module.exports = { esquemaCadastro, esquemaEntrada, esquemaCriarTarefa, esquemaAtualizarTarefa, esquemaCriarLembrete, esquemaAtualizarLembrete, esquemaWebhookEvolution, validar, tiposTarefa, prioridades, statusTarefa };
+module.exports = { esquemaTelefone, esquemaCadastro, esquemaEntrada, esquemaCriarTarefa, esquemaAtualizarTarefa, esquemaCriarLembrete, esquemaAtualizarLembrete, esquemaWebhookEvolution, validar, tiposTarefa, prioridades, statusTarefa };
