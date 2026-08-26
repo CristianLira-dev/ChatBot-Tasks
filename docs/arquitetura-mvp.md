@@ -17,7 +17,7 @@ Backend Node.js / webhook
    ↓  Redis + BullMQ
 Processador de mensagens
    ↓
-PostgreSQL: usuário, conversa, mensagem, idempotência
+MySQL: usuário, conversa, mensagem, idempotência
    ↓  HTTP interno autenticado
 Chatbot Python / FastAPI
    ↓  intenção + entidades + resposta estruturada
@@ -32,10 +32,10 @@ Serviço de calendários
    ↓
 Evolution API → WhatsApp
 
-React/Vite → API REST Node.js → PostgreSQL
+React/Vite → API REST Node.js → MySQL
 ```
 
-O frontend nunca acessa PostgreSQL, Redis, Evolution API, tokens OAuth ou o chatbot diretamente. O backend é o gateway e orquestrador de todas as operações.
+O frontend nunca acessa MySQL, Redis, Evolution API, tokens OAuth ou o chatbot diretamente. O backend é o gateway e orquestrador de todas as operações.
 
 ## 3. Serviços e stack
 
@@ -44,11 +44,11 @@ O frontend nunca acessa PostgreSQL, Redis, Evolution API, tokens OAuth ou o chat
 | `frontend` | React, Vite, JavaScript, React Router, Axios | Painel, autenticação e consumo da API | 5173 |
 | `backend` | Node.js, Express, Prisma, Zod, Pino, BullMQ | API REST, autenticação, negócio, webhooks e integrações | 3000 |
 | `chatbot` | Python, FastAPI, Pydantic | Interpretação de mensagens e geração de resposta estruturada | 8000 |
-| `postgres` | PostgreSQL 16 | Persistência relacional multiusuário | 5432 |
+| `mysql` | MySQL 8 / XAMPP | Persistência relacional multiusuário | 3306 |
 | `redis` | Redis 7 | Filas, idempotência e armazenamento transitório | 6379 |
 | Evolution API | Serviço externo ou container separado | WhatsApp, envio e webhooks | externo |
 
-Duas formas de execução são suportadas. A primeira, recomendada para desenvolvimento no Windows, é a execução local dos aplicativos sem Docker, usando o modo memória para uma experiência rápida ou instalações locais de PostgreSQL e Redis para persistência e processamento assíncrono. A segunda é o **Docker Compose**, mantido como alternativa para reproduzir o ambiente completo com serviços isolados.
+Duas formas de execução são suportadas. A primeira, recomendada para desenvolvimento no Windows, é a execução local dos aplicativos sem Docker, usando o modo memória para uma experiência rápida ou MySQL do XAMPP e Redis para persistência e processamento assíncrono. A segunda é o **Docker Compose**, mantido como alternativa para reproduzir o ambiente completo com MySQL, Redis e serviços isolados. O PostgreSQL é mantido como destino de uma migração futura, em uma etapa separada de infraestrutura.
 
 | Abordagem | Trade-offs | Custo | Complexidade de configuração |
 |---|---|---|---|

@@ -2,7 +2,7 @@
 
 > Você fala. O assistente organiza.
 
-Este repositório contém o MVP da Lembraí, um assistente acadêmico integrado ao WhatsApp, com painel web em React, API em Node.js, chatbot em Python/FastAPI, PostgreSQL e Redis/BullMQ. A execução recomendada para desenvolvimento no Windows **não depende de Docker**.
+Este repositório contém o MVP da Lembraí, um assistente acadêmico integrado ao WhatsApp, com painel web em React, API em Node.js, chatbot em Python/FastAPI, MySQL e Redis/BullMQ. A execução recomendada para desenvolvimento no Windows **não depende de Docker**. O banco atual usa MySQL local do XAMPP; PostgreSQL fica como etapa futura de migração.
 
 ## O que foi implementado
 
@@ -16,7 +16,7 @@ O painel web permite criar conta, entrar, visualizar indicadores, criar, editar,
 
 ## Execução rápida sem Docker
 
-O modo rápido usa o repositório em memória e o WhatsApp simulado. Ele é o caminho mais simples para abrir o painel e testar o produto sem instalar PostgreSQL, Redis ou Docker. Os dados são perdidos quando o backend é encerrado.
+O modo rápido usa o repositório em memória e o WhatsApp simulado. Ele é o caminho mais simples para abrir o painel e testar o produto sem instalar MySQL, Redis ou Docker. Os dados são perdidos quando o backend é encerrado.
 
 No Windows, abra um PowerShell na pasta do projeto e execute:
 
@@ -70,7 +70,7 @@ Depois acesse [http://localhost:5173](http://localhost:5173). A variável `VITE_
 
 ## Modo local completo sem Docker
 
-Para manter dados entre reinicializações e executar o fluxo assíncrono completo, instale localmente uma instância de PostgreSQL e uma instância de Redis compatível. Crie um banco chamado `assistente_academico` e um usuário com permissão para executar migrations.
+Para manter dados entre reinicializações e executar o fluxo assíncrono completo, inicie o MySQL e o Apache no XAMPP e instale localmente uma instância de Redis compatível. No phpMyAdmin, crie um banco chamado `assistente_academico`. O usuário padrão do XAMPP costuma ser `root` sem senha; se você configurou uma senha, ajuste a URL abaixo.
 
 Crie um arquivo local chamado `.env` na raiz do projeto. Ele é ignorado pelo Git e não deve ser enviado ao repositório. Um conjunto mínimo de variáveis é:
 
@@ -78,7 +78,7 @@ Crie um arquivo local chamado `.env` na raiz do projeto. Ele é ignorado pelo Gi
 AMBIENTE=desenvolvimento
 PORTA_BACKEND=3000
 URL_FRONTEND=http://localhost:5173
-DATABASE_URL=postgresql://assistente:assistente@localhost:5432/assistente_academico?schema=public
+DATABASE_URL=mysql://root@127.0.0.1:3306/assistente_academico
 REDIS_URL=redis://localhost:6379
 JWT_SEGREDO=troque-por-um-segredo-local
 URL_CHATBOT=http://localhost:8000
@@ -86,6 +86,8 @@ TOKEN_SERVICO_INTERNO=troque-por-um-token-local
 MODO_WHATSAPP=simulado
 EVOLUTION_WEBHOOK_SEGREDO=troque-por-um-segredo-de-webhook
 ```
+
+Se o MySQL tiver senha, use o formato `mysql://root:SUA_SENHA@127.0.0.1:3306/assistente_academico`. Para o primeiro banco, o Prisma já possui uma migração inicial compatível com MySQL.
 
 Em terminais separados, execute o chatbot, a API, o worker e o frontend:
 
@@ -114,7 +116,7 @@ npm install
 npm run desenvolvimento
 ```
 
-No modo completo, mantenha `USAR_BANCO_MEMORIA` e `USAR_FILAS_MEMORIA` ausentes ou definidos como `false`. O worker precisa de Redis; o painel e a API precisam conseguir alcançar os serviços pelos endereços definidos no `.env`.
+No modo completo, mantenha `USAR_BANCO_MEMORIA` e `USAR_FILAS_MEMORIA` ausentes ou definidos como `false`. O worker precisa de Redis; o painel e a API precisam conseguir alcançar o MySQL e os demais serviços pelos endereços definidos no `.env`.
 
 ## Teste do webhook simulado
 
@@ -144,7 +146,7 @@ Invoke-RestMethod -Method Post -Uri http://localhost:3000/api/webhooks/evolution
 
 A primeira mensagem solicita confirmação. Envie uma segunda requisição com o mesmo telefone e o conteúdo `Sim` para concluir a criação da tarefa em modo simulado. A resposta do WhatsApp aparece no retorno e nos logs da API.
 
-## Docker Compose — alternativa futura
+## Docker Compose — alternativa ao XAMPP
 
 O Compose permanece versionado para ambientes que já tenham Docker Desktop configurado:
 
@@ -153,7 +155,7 @@ cd C:\cristian\ChatBot-Tasks
 docker compose up --build
 ```
 
-Esse caminho inicia frontend, backend, chatbot, PostgreSQL, Redis e worker em containers separados. Ele não é necessário para o modo rápido local.
+Esse caminho inicia frontend, backend, chatbot, MySQL, Redis e worker em containers separados. Ele não é necessário para o modo rápido local nem para o uso do MySQL pelo XAMPP.
 
 ## Testes e validações
 
@@ -181,6 +183,8 @@ npm run build
 O endpoint `GET /api/saude` confirma a disponibilidade da API. A documentação interativa do chatbot fica em `http://localhost:8000/docs`.
 
 ## Integrações reais
+
+O banco atual do projeto é MySQL. A migração para PostgreSQL deve ser feita futuramente em uma etapa separada, gerando uma nova migração e validando os dados antes da troca de ambiente.
 
 Para usar a Evolution API, preencha `EVOLUTION_API_URL`, `EVOLUTION_API_CHAVE`, `EVOLUTION_API_INSTANCIA`, `EVOLUTION_WEBHOOK_SEGREDO` e defina `MODO_WHATSAPP=evolution`. Em produção, o webhook deve usar HTTPS.
 
