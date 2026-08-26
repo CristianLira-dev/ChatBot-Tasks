@@ -2,7 +2,7 @@
 
 > Você fala. O assistente organiza.
 
-Este repositório contém o MVP da Lembraí, um assistente acadêmico integrado ao WhatsApp, com painel web em React, API em Node.js, chatbot em Python/FastAPI, MySQL e Redis/BullMQ. A execução recomendada para desenvolvimento no Windows **não depende de Docker**. O banco atual usa MySQL local do XAMPP; PostgreSQL fica como etapa futura de migração.
+Este repositório contém o MVP da Lembraí, um assistente acadêmico integrado ao WhatsApp, com painel web em React, API em Node.js, chatbot em Python/FastAPI, PostgreSQL/Supabase e Redis/BullMQ. A execução recomendada para desenvolvimento no Windows **não depende de Docker**. O banco principal usa PostgreSQL hospedado no Supabase.
 
 ## O que foi implementado
 
@@ -16,7 +16,7 @@ O painel web permite criar conta, entrar, visualizar indicadores, criar, editar,
 
 ## Execução rápida sem Docker
 
-O modo rápido usa o repositório em memória e o WhatsApp simulado. Ele é o caminho mais simples para abrir o painel e testar o produto sem instalar MySQL, Redis ou Docker. Os dados são perdidos quando o backend é encerrado.
+O modo rápido usa o repositório em memória e o WhatsApp simulado. Ele é o caminho mais simples para abrir o painel e testar o produto sem instalar PostgreSQL, Redis ou Docker. Os dados são perdidos quando o backend é encerrado.
 
 No Windows, abra um PowerShell na pasta do projeto e execute:
 
@@ -68,9 +68,9 @@ npm run desenvolvimento
 
 Depois acesse [http://localhost:5173](http://localhost:5173). A variável `VITE_URL_API` pode ser omitida, pois o frontend usa `http://localhost:3000/api` como padrão.
 
-## Modo local completo sem Docker
+## PostgreSQL remoto com Supabase
 
-Para manter dados entre reinicializações e executar o fluxo assíncrono completo, inicie o MySQL e o Apache no XAMPP e instale localmente uma instância de Redis compatível. No phpMyAdmin, crie um banco chamado `assistente_academico`. O usuário padrão do XAMPP costuma ser `root` sem senha; se você configurou uma senha, ajuste a URL abaixo.
+Para manter os dados entre reinicializações, crie um projeto no Supabase e abra o botão **Connect**. Copie a string de conexão PostgreSQL do modo **Session pooler**, normalmente na porta `5432`. O backend usa Prisma, portanto a string deve ser mantida apenas no arquivo `.env` local ou nas variáveis protegidas do ambiente de hospedagem.
 
 Crie um arquivo local chamado `.env` na raiz do projeto. Ele é ignorado pelo Git e não deve ser enviado ao repositório. Um conjunto mínimo de variáveis é:
 
@@ -78,7 +78,7 @@ Crie um arquivo local chamado `.env` na raiz do projeto. Ele é ignorado pelo Gi
 AMBIENTE=desenvolvimento
 PORTA_BACKEND=3000
 URL_FRONTEND=http://localhost:5173
-DATABASE_URL=mysql://root@127.0.0.1:3306/assistente_academico
+DATABASE_URL="COLE_A_CONNECTION_STRING_DO_SUPABASE_AQUI"
 REDIS_URL=redis://localhost:6379
 JWT_SEGREDO=troque-por-um-segredo-local
 URL_CHATBOT=http://localhost:8000
@@ -87,7 +87,7 @@ MODO_WHATSAPP=simulado
 EVOLUTION_WEBHOOK_SEGREDO=troque-por-um-segredo-de-webhook
 ```
 
-Se o MySQL tiver senha, use o formato `mysql://root:SUA_SENHA@127.0.0.1:3306/assistente_academico`. Para o primeiro banco, o Prisma já possui uma migração inicial compatível com MySQL.
+No Supabase, recomenda-se usar um usuário de banco próprio para o Prisma. Se a senha contiver caracteres especiais, mantenha a string copiada pelo botão **Connect**, pois ela já contém o formato correto. Para uma aplicação server-based local, a conexão de sessão na porta `5432` é a escolha inicial; em um runtime serverless, use a conexão de transação na porta `6543` conforme a documentação do Supabase.
 
 Em terminais separados, execute o chatbot, a API, o worker e o frontend:
 
@@ -116,7 +116,7 @@ npm install
 npm run desenvolvimento
 ```
 
-No modo completo, mantenha `USAR_BANCO_MEMORIA` e `USAR_FILAS_MEMORIA` ausentes ou definidos como `false`. O worker precisa de Redis; o painel e a API precisam conseguir alcançar o MySQL e os demais serviços pelos endereços definidos no `.env`.
+No modo completo, mantenha `USAR_BANCO_MEMORIA` e `USAR_FILAS_MEMORIA` ausentes ou definidos como `false`. O worker precisa de Redis; o painel e a API precisam conseguir alcançar o PostgreSQL do Supabase e os demais serviços pelos endereços definidos no `.env`.
 
 ## Teste do webhook simulado
 
@@ -146,7 +146,7 @@ Invoke-RestMethod -Method Post -Uri http://localhost:3000/api/webhooks/evolution
 
 A primeira mensagem solicita confirmação. Envie uma segunda requisição com o mesmo telefone e o conteúdo `Sim` para concluir a criação da tarefa em modo simulado. A resposta do WhatsApp aparece no retorno e nos logs da API.
 
-## Docker Compose — alternativa ao XAMPP
+## Docker Compose — alternativa local
 
 O Compose permanece versionado para ambientes que já tenham Docker Desktop configurado:
 
@@ -155,7 +155,7 @@ cd C:\cristian\ChatBot-Tasks
 docker compose up --build
 ```
 
-Esse caminho inicia frontend, backend, chatbot, MySQL, Redis e worker em containers separados. Ele não é necessário para o modo rápido local nem para o uso do MySQL pelo XAMPP.
+Esse caminho inicia frontend, backend, chatbot, PostgreSQL, Redis e worker em containers separados. Ele não é necessário para o modo rápido local nem para o uso do PostgreSQL no Supabase.
 
 ## Testes e validações
 
@@ -184,7 +184,7 @@ O endpoint `GET /api/saude` confirma a disponibilidade da API. A documentação 
 
 ## Integrações reais
 
-O banco atual do projeto é MySQL. A migração para PostgreSQL deve ser feita futuramente em uma etapa separada, gerando uma nova migração e validando os dados antes da troca de ambiente.
+O banco atual do projeto é PostgreSQL compatível com Supabase. Para executar as migrations, use a `DATABASE_URL` de sessão apropriada do Supabase e valide o ambiente antes de disponibilizar a aplicação.
 
 Para usar a Evolution API, preencha `EVOLUTION_API_URL`, `EVOLUTION_API_CHAVE`, `EVOLUTION_API_INSTANCIA`, `EVOLUTION_WEBHOOK_SEGREDO` e defina `MODO_WHATSAPP=evolution`. Em produção, o webhook deve usar HTTPS.
 

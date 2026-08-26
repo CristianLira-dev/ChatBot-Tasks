@@ -17,7 +17,7 @@ module.exports = {
   urlFrontend: process.env.URL_FRONTEND || 'http://localhost:5173',
   urlBackend: process.env.URL_BACKEND || 'http://localhost:3000',
   corsOrigens: lista(process.env.CORS_ORIGENS, 'http://localhost:5173'),
-  banco: process.env.DATABASE_URL || 'mysql://root@127.0.0.1:3306/assistente_academico',
+  banco: process.env.DATABASE_URL || 'postgresql://postgres:postgres@127.0.0.1:5432/assistente_academico?schema=public',
   redis: process.env.REDIS_URL || 'redis://localhost:6379',
   jwtSegredo: process.env.JWT_SEGREDO || 'desenvolvimento-troque-este-segredo',
   jwtExpiracao: process.env.JWT_EXPIRACAO || '7d',
