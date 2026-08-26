@@ -10,6 +10,6 @@ A execução rápida recomendada **não exige Docker**. Na pasta do projeto, exe
 npm run dev
 ```
 
-Esse comando inicia o chatbot, o backend em modo memória e o frontend. Depois acesse [http://localhost:5173](http://localhost:5173). Consulte [`LEIA-ME.md`](LEIA-ME.md) para configurar o PostgreSQL do Supabase, o Redis e a alternativa local com Docker Compose.
+Esse comando inicia o chatbot, o backend em modo memória e o frontend. Depois acesse [http://localhost:5173](http://localhost:5173). Para usar o PostgreSQL do Supabase sem Redis e sem FFmpeg, execute `npm run dev:sem-redis`. Consulte [`LEIA-ME.md`](LEIA-ME.md) para os demais modos de execução.
 
 A arquitetura completa está em [`docs/arquitetura-mvp.md`](docs/arquitetura-mvp.md). O Design System obrigatório está consolidado em [`docs/design-system-lembr-ai.md`](docs/design-system-lembr-ai.md).

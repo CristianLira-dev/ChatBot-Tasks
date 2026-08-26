@@ -67,6 +67,7 @@ class RepositorioMemoria {
   }
 
   async listarLembretes(usuarioId) { return this.lembretes.filter((item) => item.usuarioId === usuarioId).sort((a, b) => new Date(a.agendadoPara) - new Date(b.agendadoPara)); }
+  async listarLembretesPendentes(ate = new Date()) { return this.lembretes.filter((item) => item.status === 'agendado' && new Date(item.agendadoPara) <= ate).sort((a, b) => new Date(a.agendadoPara) - new Date(b.agendadoPara)); }
   async criarLembrete(dados) { const item = { id: criarId('lem'), criadoEm: new Date(), status: 'agendado', tentativas: 0, ...dados, agendadoPara: new Date(dados.agendadoPara) }; this.lembretes.push(item); return item; }
   async buscarLembrete(usuarioId, id) { return this.lembretes.find((item) => item.id === id && item.usuarioId === usuarioId) || null; }
   async buscarLembretePorId(id) { return this.lembretes.find((item) => item.id === id) || null; }
@@ -122,6 +123,7 @@ class RepositorioPrisma {
   async excluirTarefa(usuarioId, id) { const existente = await this.buscarTarefa(usuarioId, id); if (!existente) return false; await clientePrisma.tarefa.delete({ where: { id } }); return true; }
 
   async listarLembretes(usuarioId) { return clientePrisma.lembrete.findMany({ where: { usuarioId }, orderBy: { agendadoPara: 'asc' }, include: { tarefa: true } }); }
+  async listarLembretesPendentes(ate = new Date()) { return clientePrisma.lembrete.findMany({ where: { status: 'agendado', agendadoPara: { lte: ate } }, orderBy: { agendadoPara: 'asc' }, take: 50, include: { tarefa: true } }); }
   async criarLembrete(dados) { return clientePrisma.lembrete.create({ data: { ...dados, agendadoPara: new Date(dados.agendadoPara) } }); }
   async buscarLembrete(usuarioId, id) { return clientePrisma.lembrete.findFirst({ where: { id, usuarioId }, include: { tarefa: true } }); }
   async buscarLembretePorId(id) { return clientePrisma.lembrete.findUnique({ where: { id }, include: { tarefa: true } }); }

@@ -56,14 +56,20 @@ function encerrar() {
 }
 
 try {
+  const semRedis = process.argv.includes('sem-redis');
   preparar();
   iniciar(pythonVirtual, ['-m', 'uvicorn', 'aplicativo.principal:aplicacao', '--reload', '--port', '8000'], chatbot, { TOKEN_SERVICO_INTERNO: 'desenvolvimento-token-interno' });
-  iniciar(npm, ['run', 'desenvolvimento:memoria'], backend, { PORTA_BACKEND: '3000', TOKEN_SERVICO_INTERNO: 'desenvolvimento-token-interno' });
+  iniciar(npm, ['run', semRedis ? 'desenvolvimento:sem-redis' : 'desenvolvimento:memoria'], backend, {
+    PORTA_BACKEND: '3000',
+    TOKEN_SERVICO_INTERNO: 'desenvolvimento-token-interno',
+    ...(semRedis ? { USAR_BANCO_MEMORIA: 'false', USAR_FILAS_MEMORIA: 'true' } : {})
+  });
   iniciar(npm, ['run', 'desenvolvimento'], frontend, { VITE_URL_API: 'http://localhost:3000/api' });
   console.log('\nServiços iniciados:');
   console.log('Painel:  http://localhost:5173');
   console.log('API:     http://localhost:3000/api/saude');
   console.log('Chatbot: http://localhost:8000/docs');
+  console.log(semRedis ? 'Banco:   PostgreSQL/Supabase; processamento direto sem Redis' : 'Banco:   memória; WhatsApp simulado');
   console.log('\nPressione Ctrl+C para encerrar.\n');
 } catch (erro) {
   console.error(`\nNão foi possível iniciar o ambiente local: ${erro.message}`);

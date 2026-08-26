@@ -118,6 +118,20 @@ npm run desenvolvimento
 
 No modo completo, mantenha `USAR_BANCO_MEMORIA` e `USAR_FILAS_MEMORIA` ausentes ou definidos como `false`. O worker precisa de Redis; o painel e a API precisam conseguir alcançar o PostgreSQL do Supabase e os demais serviços pelos endereços definidos no `.env`.
 
+### Execução sem Redis e sem FFmpeg
+
+Para um teste real usando o PostgreSQL do Supabase, mas somente com mensagens de texto, execute na raiz do projeto:
+
+```powershell
+npm run dev:sem-redis
+```
+
+Esse comando inicia o chatbot, o backend conectado ao Supabase e o frontend. O backend usa processamento direto para mensagens recebidas pelo webhook e um agendador local que consulta os lembretes pendentes no PostgreSQL. Não execute `npm run worker` nesse modo, porque o worker tradicional depende do Redis.
+
+Nesse modo, o fluxo é limitado a mensagens de texto. Áudios, vídeos, imagens e outros arquivos são ignorados até que o processamento de mídia seja habilitado. O FFmpeg não é necessário para esse cenário.
+
+O modo sem Redis não mantém uma fila distribuída nem oferece as mesmas garantias de reprocessamento do BullMQ. Para um projeto de teste com baixo volume, ele simplifica a instalação sem alterar a persistência do PostgreSQL.
+
 ## Teste do webhook simulado
 
 O endpoint de simulação não exige Evolution API nem Redis e chama o orquestrador diretamente. Com a API e o chatbot em execução, envie no PowerShell:

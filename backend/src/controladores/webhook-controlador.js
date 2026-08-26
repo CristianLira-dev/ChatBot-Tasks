@@ -14,7 +14,16 @@ function criarControladorWebhook({ repositorio, filaMensagens, servicoAssistente
         const texto = extrairTextoMensagem(evento);
         const telefone = normalizarTelefone(evento.key?.remoteJid || dados.sender || '');
         if (!texto || !telefone || evento.key?.fromMe) return;
-        await filaMensagens.add('processar-mensagem', { telefone, nome: evento.pushName || 'Estudante', texto, identificadorExterno: identificador, recebidoEm: dados.date_time || new Date().toISOString(), evento });
+        const entrada = { telefone, nome: evento.pushName || 'Estudante', texto, identificadorExterno: identificador, recebidoEm: dados.date_time || new Date().toISOString(), evento };
+        if (process.env.USAR_FILAS_MEMORIA === 'true') {
+          try {
+            await servicoAssistente.processarEntrada(entrada);
+          } catch (erro) {
+            console.error('[Webhook] Falha ao processar mensagem sem Redis:', erro.message);
+          }
+          return;
+        }
+        await filaMensagens.add('processar-mensagem', entrada);
       }
     },
     simular: async (req, res) => {

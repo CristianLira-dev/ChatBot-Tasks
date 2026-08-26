@@ -5,6 +5,7 @@
   "description": "Inicializador local da Lembraí",
   "scripts": {
     "dev": "node scripts/iniciar-local.js",
+    "dev:sem-redis": "node scripts/iniciar-local.js sem-redis",
     "inicio": "npm run dev"
   }
 }
