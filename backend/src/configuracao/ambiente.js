@@ -13,7 +13,7 @@ function lista(valor, padrao) {
 
 module.exports = {
   ambiente: process.env.AMBIENTE || 'desenvolvimento',
-  porta: Number(process.env.PORTA_BACKEND || 3000),
+  porta: Number(process.env.PORT || process.env.PORTA_BACKEND || 3000),
   urlFrontend: process.env.URL_FRONTEND || 'http://localhost:5173',
   urlBackend: process.env.URL_BACKEND || 'http://localhost:3000',
   corsOrigens: lista(process.env.CORS_ORIGENS, 'http://localhost:5173'),

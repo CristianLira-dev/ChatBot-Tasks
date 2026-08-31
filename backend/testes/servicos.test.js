@@ -28,7 +28,7 @@ test('calcula lembrete um dia antes', () => {
 test('cria tarefa e agenda lembrete em modo memória', async () => {
   const cenario = criarCenario();
   const usuario = await cenario.repositorio.criarUsuario({ nome: 'Cristian', email: 'cristian@example.com', senhaCriptografada: 'hash', telefone: '5511999999999' });
-  const resultado = await cenario.tarefas.criar(usuario.id, { titulo: 'Trabalho', tipo: 'trabalho', dataEntrega: '2026-08-28T19:00:00-03:00', reminders: [{ amount: 1, unit: 'day' }] }, { sincronizarCalendario: false });
+  const resultado = await cenario.tarefas.criar(usuario.id, { titulo: 'Trabalho', tipo: 'trabalho', dataEntrega: '2027-08-28T19:00:00-03:00', reminders: [{ amount: 1, unit: 'day' }] }, { sincronizarCalendario: false });
   assert.equal(resultado.tarefa.titulo, 'Trabalho');
   const lembretes = await cenario.repositorio.listarLembretes(usuario.id);
   assert.equal(lembretes.length, 1);
