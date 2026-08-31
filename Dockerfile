@@ -13,6 +13,8 @@ COPY chatbot/requisitos.txt ./chatbot/
 RUN pip3 install --no-cache-dir --break-system-packages -r chatbot/requisitos.txt
 
 COPY backend ./backend
+RUN npm --prefix backend run prisma:gerar
+
 COPY chatbot ./chatbot
 COPY scripts/iniciar-render-unico.sh ./scripts/iniciar-render-unico.sh
 RUN chmod +x ./scripts/iniciar-render-unico.sh
