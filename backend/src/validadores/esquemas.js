@@ -1,6 +1,15 @@
 const { z } = require('zod');
 
-const esquemaTelefone = z.string().trim().min(8).max(30).transform((valor) => valor.replace(/\D/g, '')).refine((valor) => valor.length >= 8 && valor.length <= 15, 'Informe um número de WhatsApp válido');
+const esquemaTelefone = z
+  .string()
+  .trim()
+  .min(8)
+  .max(30)
+  .transform((valor) => valor.replace(/\D/g, ''))
+  .refine(
+    (valor) => valor.length >= 8 && valor.length <= 15,
+    'Informe um número de WhatsApp válido'
+  );
 
 const esquemaCadastro = z.object({
   nome: z.string().trim().min(2).max(120),
@@ -12,7 +21,6 @@ const esquemaCadastro = z.object({
 
 const esquemaEntrada = z.object({
   email: z.string().trim().email().transform((valor) => valor.toLowerCase()),
-  telefone: esquemaTelefone,
   senha: z.string().min(1).max(128)
 });
 
@@ -32,7 +40,17 @@ const camposTarefa = {
 };
 
 const esquemaCriarTarefa = z.object(camposTarefa);
-const esquemaAtualizarTarefa = z.object({ ...camposTarefa, tipo: z.enum(tiposTarefa).optional(), prioridade: z.enum(prioridades).optional(), titulo: camposTarefa.titulo.optional(), dataEntrega: camposTarefa.dataEntrega.optional(), status: z.enum(statusTarefa).optional() }).partial();
+
+const esquemaAtualizarTarefa = z
+  .object({
+    ...camposTarefa,
+    tipo: z.enum(tiposTarefa).optional(),
+    prioridade: z.enum(prioridades).optional(),
+    titulo: camposTarefa.titulo.optional(),
+    dataEntrega: camposTarefa.dataEntrega.optional(),
+    status: z.enum(statusTarefa).optional()
+  })
+  .partial();
 
 const esquemaCriarLembrete = z.object({
   tarefaId: z.string().min(1),
@@ -58,13 +76,28 @@ const esquemaWebhookEvolution = z.object({
 
 function validar(esquema, dados) {
   const resultado = esquema.safeParse(dados);
+
   if (!resultado.success) {
     const erro = new Error('Dados inválidos');
     erro.statusCode = 400;
     erro.detalhes = resultado.error.flatten();
     throw erro;
   }
+
   return resultado.data;
 }
 
-module.exports = { esquemaTelefone, esquemaCadastro, esquemaEntrada, esquemaCriarTarefa, esquemaAtualizarTarefa, esquemaCriarLembrete, esquemaAtualizarLembrete, esquemaWebhookEvolution, validar, tiposTarefa, prioridades, statusTarefa };
+module.exports = {
+  esquemaTelefone,
+  esquemaCadastro,
+  esquemaEntrada,
+  esquemaCriarTarefa,
+  esquemaAtualizarTarefa,
+  esquemaCriarLembrete,
+  esquemaAtualizarLembrete,
+  esquemaWebhookEvolution,
+  validar,
+  tiposTarefa,
+  prioridades,
+  statusTarefa
+};
